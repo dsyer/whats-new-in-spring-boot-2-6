@@ -33,6 +33,8 @@ public static void main(String[] args) {
 }
 ```
 
+NOTE: Watch out for the "Sring Boot Extension Pack" in VSCode - it drains the `/startup` endpoint on startup, so you never see any metrics.
+
 ## Info Endpoint
 
 The `/info` endpoint is composed of `InfoContributors`. The original (Spring Boot 1.0) behaviour of rendering all `Environment` properties starting with `info.` is still there but you have to enable it explicitly now:

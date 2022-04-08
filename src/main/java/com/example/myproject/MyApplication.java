@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.CommandLinePropertySource;
 
@@ -19,11 +18,6 @@ public class MyApplication {
 				.equals(CommandLinePropertySource.COMMAND_LINE_PROPERTY_SOURCE_NAME))
 						? data.withValue("you're never gonna get it")
 						: data;
-	}
-
-	@Bean
-	public CookieSameSiteSupplier cookieSameSiteSupplier() {
-		return CookieSameSiteSupplier.ofStrict().whenHasName("mycookie");
 	}
 
 	public static void main(String[] args) {
