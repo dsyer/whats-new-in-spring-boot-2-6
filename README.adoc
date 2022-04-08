@@ -78,6 +78,10 @@ result:
 
 ## Native Image
 
+https://github.com/spring-projects-experimental/spring-native[Spring Native] can be used to convert a Spring Boot application into a native executable using https://github.com/oracle/graalvm[GraalVM]. Startup time is very fast and image sizes and memory usage also compare very favourably with the vanilla JVM for many applications. It worked with Spring Boot 2.5, but it tracks changes in Spring Framework and Spring Boot, so you need the latest versions for the best results. Spring Boot 2.6 provides several improvements that would be invisible to JVM users but manifest as more efficient memory usage and executable binary sizes.
+
+NOTE: https://start.spring.io[Spring Initializer] (and the tooling provided by IDEs that integrate with it) can generate a project template with the recommended settings for building a native image.
+
 ## Controller Endpoint Pattern Matcher
 
 The default matcher for `@Controller` endpoints is now a regular expression matcher (with Spring Boot, but not with vanilla Spring Framework). You can go back to the old behaviour with a config flag `spring.mvc.pathmatch.matching-strategy=ant-path-matcher`. Watch out for the default being slightly stricter especially with Spring Security.
