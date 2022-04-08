@@ -1,8 +1,9 @@
 package com.example.myproject;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.endpoint.SanitizingFunction;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +27,8 @@ public class MyApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(MyApplication.class, args);
+		new SpringApplicationBuilder(MyApplication.class).applicationStartup(new BufferingApplicationStartup(2048))
+				.run(args);
 	}
 
 }

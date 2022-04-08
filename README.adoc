@@ -1,8 +1,89 @@
-## What's New in Spring Boot 2.6
+:toc:
 
-Demo code from the webinar "What's New in Spring Boot 2.6".
+# What's New in Spring Boot 2.6
 
-https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.6-Release-Notes
+Demo code from the webinar "What's New in Spring Boot 2.6" with some commentary and extra detail on the main points.
 
-https://github.com/spring-projects/spring-boot/milestones
+Also see the https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.6-Release-Notes[Release Notes] and the https://github.com/spring-projects/spring-boot/milestones[release schedule] on Github.
 
+## Health Endpoints on Main Port
+
+When the actuator endpoints are configured on a different port (`management.server.port`) the health groups `/health/liveness` and `/health/readiness` can give misleading status unless they are switched to the main `server.port`. If you set
+
+```
+management.endpoint.health.probes.add-additional-paths=true
+```
+
+then the `/actuator/health/{liveness,readiness}` endpoints are also exposed on the main port at `/{livez,readyz}`. N.B. this does not work if you also set `management.endpoint.health.group.*.show-details=always`.
+
+## Startup Metrics
+
+Auto-configuration exposes two metrics related to application startup:
+
+* `application.started.time`: time taken to start the application.
+* `application.ready.time`: time taken for the application to be ready to service requests.
+
+You can also hook into the individual bean lifecycles and measure the startup perfrormance at a lower level with `ApplicationStartup`. Inject it into `SpringApplication` before you start it, or use a basic built-in implementation with `/actuator/startup`:
+
+```java
+public static void main(String[] args) {
+    new SpringApplicationBuilder(MyApplication.class)
+            .applicationStartup(new BufferingApplicationStartup(2048))
+            .run(args);
+}
+```
+
+## Info Endpoint
+
+The `/info` endpoint is composed of `InfoContributors`. The original (Spring Boot 1.0) behaviour of rendering all `Environment` properties starting with `info.` is still there but you have to enable it explicitly now:
+
+```
+management.info.env.enabled=true
+```
+
+You also have to explicitly enable the endpoint itself (since Spring Boot 2.4):
+
+```
+management.endpoints.web.exposure.include=info
+```
+
+A new `InfoContributor` is the `JavaInfoContributor` which shows details of the runtime JDK:
+
+```
+$ curl localhost:8080/actuator/info | jq
+```
+
+result:
+
+```json
+{
+  "dept": "mydepartment",
+  "java": {
+    "vendor": "Eclipse Adoptium",
+    "version": "17.0.2",
+    "runtime": {
+      "name": "OpenJDK Runtime Environment",
+      "version": "17.0.2+8"
+    },
+    "jvm": {
+      "name": "OpenJDK 64-Bit Server VM",
+      "vendor": "Eclipse Adoptium",
+      "version": "17.0.2+8"
+    }
+  }
+}
+```
+
+## Native Image
+
+## Ant Pattern Matcher
+
+## Cookies Same Site Policy
+
+## Cycles
+
+## Records with `@ConfigurationProperties`
+
+## Wavefront
+
+## Env Endpoint + Sanitizer
