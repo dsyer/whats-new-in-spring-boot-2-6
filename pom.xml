@@ -18,17 +18,6 @@
 		<repackage.classifier />
 		<spring-native.version>0.11.2</spring-native.version>
 	</properties>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.wavefront</groupId>
-				<artifactId>wavefront-spring-boot-bom</artifactId>
-				<version>${wavefront.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -37,10 +26,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.wavefront</groupId>
-			<artifactId>wavefront-spring-boot-starter</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.experimental</groupId>
