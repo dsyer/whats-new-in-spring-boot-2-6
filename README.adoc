@@ -33,7 +33,7 @@ public static void main(String[] args) {
 }
 ```
 
-NOTE: Watch out for the "Sring Boot Extension Pack" in VSCode - it drains the `/startup` endpoint on startup, so you never see any metrics.
+NOTE: Watch out for the "Sring Boot Extension Pack" in VSCode - it drains the `/startup` endpoint on startup, so you never see any metrics in the endpoint. But you _do_ see them in code lenses above each `@Bean` or `@Configuration`.
 
 ## Info Endpoint
 
@@ -79,6 +79,45 @@ result:
 ## Native Image
 
 https://github.com/spring-projects-experimental/spring-native[Spring Native] can be used to convert a Spring Boot application into a native executable using https://github.com/oracle/graalvm[GraalVM]. Startup time is very fast and image sizes and memory usage also compare very favourably with the vanilla JVM for many applications. It worked with Spring Boot 2.5, but it tracks changes in Spring Framework and Spring Boot, so you need the latest versions for the best results. Spring Boot 2.6 provides several improvements that would be invisible to JVM users but manifest as more efficient memory usage and executable binary sizes.
+
+Build:
+
+```
+$ mvn spring-boot:build-image
+...
+[INFO]     [creator]     Adding cache layer 'paketo-buildpacks/native-image:native-image'
+[INFO] 
+[INFO] Successfully built image 'docker.io/library/myproject:0.0.1-SNAPSHOT'
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  08:08 min
+[INFO] Finished at: 2022-04-11T18:13:00+01:00
+[INFO] ------------------------------------------------------------------------
+```
+
+and run:
+
+```
+$ docker run -p 8080:8080 myproject:0.0.1-SNAPSHOT
+2022-04-12 05:35:20.069  INFO 1 --- [           main] o.s.nativex.NativeListener               : AOT mode enabled
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.6.6)
+
+2022-04-12 05:35:20.070  INFO 1 --- [           main] com.example.myproject.MyApplication      : Starting MyApplication using Java 11.0.14.1 on 817f5d70b46e with PID 1 (/workspace/com.example.myproject.MyApplication started by cnb in /workspace)
+2022-04-12 05:35:20.070  INFO 1 --- [           main] com.example.myproject.MyApplication      : No active profile set, falling back to 1 default profile: "default"
+2022-04-12 05:35:20.096  WARN 1 --- [           main] i.m.c.i.binder.jvm.JvmGcMetrics          : GC notifications will not be available because MemoryPoolMXBeans are not provided by the JVM
+2022-04-12 05:35:20.101  INFO 1 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+2022-04-12 05:35:20.115  INFO 1 --- [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port 8080
+2022-04-12 05:35:20.116  INFO 1 --- [           main] com.example.myproject.MyApplication      : Started MyApplication in 0.055 seconds (JVM running for 0.059)
+```
 
 NOTE: https://start.spring.io[Spring Initializer] (and the tooling provided by IDEs that integrate with it) can generate a project template with the recommended settings for building a native image.
 
